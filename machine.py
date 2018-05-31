@@ -6,9 +6,16 @@ class Machine:
 
     tape = []
 
+    procedures = {
+        'main': None
+    }
+
     def __init__(self, procedures):
 
-        self.procedures = procedures
+        self.procedures = {
+            **self.procedures,
+            **procedures
+        }
 
     def __str__(self):
         str_ = ''

@@ -1,0 +1,5 @@
+bloco main 01
+    01 * -- a d 02
+    02 b -- * d 02 !
+    02 _ -- _ i pare
+fim ; bloco main
