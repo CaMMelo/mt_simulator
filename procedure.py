@@ -3,9 +3,7 @@
 #     state: (B, procedure, target)
 # }
 
-class Procedure:
+CALL = 0
 
-    def __init__(self, initial, states):
-
-        self.initial = initial
-        self.states  = states
+DIREITA = 0
+ESQUERDA = 1

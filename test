@@ -1,5 +1,7 @@
 bloco main 01
-    01 * -- a d 02
-    02 b -- * d 02 !
-    02 _ -- _ i pare
-fim ; bloco main
+
+    01 d -- d d 01
+    01 _ -- _ i 02
+    02 _bloco-coruja pare
+
+fim
