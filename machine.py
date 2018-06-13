@@ -1,10 +1,10 @@
 # the state machine:
 # {
 #     state: (TAPE, {
-#         read: (write, go, target)
+#         read: (write, go, target, BREAKPOINT)
 #     }),
-#
-#     state: (CALL, target)
+#      #writ
+#     state: (CALL, target, BREAKPOINT)
 # }
 
 # the machine:
@@ -96,7 +96,7 @@ class VirtualMachine:
                 self.__tape += [None,]
 
             if target == PARE: # para a execução da máquina
-                break
+                return True
 
             if target == RETORNE: # remove um item do topo da pilha
 
