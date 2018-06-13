@@ -1,6 +1,6 @@
 import getopt
 import sys
-from parser import parse
+from readmt import readFile
 from machine import VirtualMachine
 
 def usage():
@@ -95,7 +95,7 @@ if __name__ == '__main__':
         print('[Augusto Amaral, Caio Melo], IFMG, 2018.\n')
 
     # parse the input file
-    procedures = parse(ifile)
+    procedures = readFile(ifile)
     machine = VirtualMachine(procedures, head)
 
     if not word:
