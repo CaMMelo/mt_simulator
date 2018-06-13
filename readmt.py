@@ -49,22 +49,18 @@ def readFile(filedir):
                     bloco = False
 
                 elif bloco == True:
+                    state   = vet[0]
+                    target  = vet[1]
+                    bp      = False
                     # Identifica CALL com breakpoint espaçado
                     if len(vet) == 4 and vet[3] == "!":
-                        #t[vet[0]] = (0,vet[q],True)
-                        #vetTrans.append(t[vet[0]])
-                        vetTrans[vet[0]] = (0,vet[1],True)
+                        bp = True
                     # Identifica CALL com breakpoint ou não
-                    elif len(vet) == 3:
+                    if len(vet) == 3:
                         if "!" in vet[2]:
+                            bp = True
                             vet[2] = vet[2].replace("!","")
-                            #t[vet[0]] = (0,vet[1],True)
-                            #vetTrans.append(t[vet[0]])
-                            vetTrans[vet[0]] = (0,vet[1],True)
-                        else:
-                            #t[vet[0]] = (0,vet[1],False)
-                            #vetTrans.append(t[vet[0]])
-                            vetTrans[vet[0]] = (0,vet[1],False)
+                        vetTrans[state] = (0,target,bp)
 
 
                     # Identifica Instrução
@@ -74,6 +70,17 @@ def readFile(filedir):
                         write = vet[3]
                         target = vet[5]
                         bp = False
+
+                        # Tratando caracteres especiais
+                        # "_" = None
+                        if _read == "_":
+                            _read = None
+                        if write == "_":
+                            write = None
+
+                        # Target = *
+                        if target == "*":
+                            target = source
 
                         if source not in vetTrans:
                             vetTrans[source] = (1, {})

@@ -1,12 +1,12 @@
   ; Detector de palindromos
   bloco main 1
-    01 a -- A i 10 !
-    01 b -- B i 20 !
+    01 a -- A i 10
+    01 b -- B i 20
     10 moveFim 11
 
     ; leu a
     11 iniEsq 12
-    12 a -- A i 30
+    12 a -- A i *
     12 b -- * i 70
     12 _ -- * i 60
 
@@ -14,7 +14,7 @@
     21 iniEsq 22
     22 a -- * i 70
     22 b -- B i 30
-    22 _ -- * i 60!
+    22 _ -- * i 60
 
     30 moveIni 31
     31 iniDir 32
