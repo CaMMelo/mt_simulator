@@ -3,7 +3,6 @@
 #     state: (TAPE, {
 #         read: (write, go, target, BREAKPOINT)
 #     }),
-#      #writ
 #     state: (CALL, target, BREAKPOINT)
 # }
 
@@ -73,7 +72,7 @@ class VirtualMachine:
             steps -= 1
 
             p, s = self.stack[-1]
-            action, symbols = self.procedures[p][s]
+            action = self.procedures[p][s][0]
 
 
             if verbose:
@@ -82,9 +81,26 @@ class VirtualMachine:
             if action == CALL: # faz uma chamada de procedimento
 
                 self.stack.append((a[1], self.procedures[a[1]][0]))
+
+                if self.procedures[p][s][2]:
+                    return False
+
                 continue
 
-            write, go, target = symbols[self.__tape[self.tape_pos]]
+            read = self.__tape[self.tape_pos]
+
+            if read not in self.procedures[p][s]:
+                write, go, target, breakpoint = symbols['*']
+
+                if write == '*':
+                    write = read
+
+            else:
+
+                write, go, target, breakpoint = symbols[read]
+
+            if breakpoint:
+                return False
 
             self.__tape[self.tape_pos] = write
             self.tape_pos += go
