@@ -110,11 +110,8 @@ if __name__ == '__main__':
     while not machine.run(verbose, steps):
         ''' executa a máquina '''
 
-        if _break:
-            break
-
         args = input('Forneça opção (-r -v -s -b): ')
-        args = options.split()
+        args = args.split()
 
         options, _ = getopt.gnu_getopt(args, 'rvbs:', long_opts)
 
@@ -149,6 +146,9 @@ if __name__ == '__main__':
 
             else:
                 print(f'{sys.argv[0]}: aviso: opção desconhecida: {opt}.')
+
+        if _break:
+            break
 
     final = machine.tape
     print(final)

@@ -57,7 +57,12 @@ class VirtualMachine:
         left = ''.join(left)
         right = ''.join(right)
 
-        print(f'{p:.>16}.{s:04}:{left:_>20}{self.head[0]}{self.__tape[self.tape_pos]}{self.head[1]}{right:_<20}')
+        _head = self.__tape[self.tape_pos]
+
+        if _head == None:
+            _head = '_'
+
+        print(f'{p:.>16}.{s:04}:{left:_>20}{self.head[0]}{_head}{self.head[1]}{right:_<20}')
 
     @property
     def tape(self):
@@ -82,6 +87,11 @@ class VirtualMachine:
 
             p, s = self.stack[-1]
 
+            if p not in self.procedures:
+
+                print(f'error: procedure {p} not defined.')
+                return True
+
             if s == PARE: # para a execução da máquina
                 return True
 
@@ -93,11 +103,15 @@ class VirtualMachine:
             if action == CALL: # faz uma chamada de procedimento
 
                 p_name = self.procedures[p][1][s][1]
+
+                if p_name not in self.procedures:
+                    print(f'error: procedure {p_name} not defined.')
+                    return True
+
                 p_start = self.procedures[p_name][0]
 
                 self.stack.append([ p_name, p_start] )
 
-                # print(self.procedures[p][1][s][2])
                 if self.procedures[p][1][s][3]:
                     return False
 
@@ -106,18 +120,21 @@ class VirtualMachine:
             read = self.__tape[self.tape_pos]
             symbols = self.procedures[p][1][s][1]
 
-            if read not in symbols:
+            if (read not in symbols) and ('*' in symbols):
+
                 write, go, target, breakpoint = symbols['*']
 
-            else:
+            elif read in symbols:
 
                 write, go, target, breakpoint = symbols[read]
 
+            else:
+
+                print(f'error: action for state \'{s}\' and symbol \'{read}\' is not defined.')
+                return True
+
             if write == '*':
                 write = read
-
-            if breakpoint:
-                return False
 
             self.__tape[self.tape_pos] = write
             self.tape_pos += go
@@ -139,5 +156,8 @@ class VirtualMachine:
                     break
 
             self.stack[-1][1] = target
+
+            if breakpoint:
+                return False
 
         return True
