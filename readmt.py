@@ -32,40 +32,48 @@ def readFile(filedir):
         content = read()
         bloco   = False
         mt = {}
-        geral = []
         for c in content:
             c = removeComent(c)
             vet = c.split()
             if len(vet) > 0:
                 if bloco == False and vet[0] == "bloco":
                     bloco = True
-                    mt[vet[1]] = (vet[2],"")
-                    vetTrans = {}
+                    mt[vet[1]] = (int(vet[2]),{})
+                    vetTrans = mt[vet[1]][1]
                     t = {}
                     s = {}
 
                 elif vet[0] == "fim":
-                    geral.append(vetTrans)
                     bloco = False
 
                 elif bloco == True:
-                    state   = vet[0]
-                    target  = vet[1]
+                    state   = int(vet[0])
+                    procname = vet[1]
+                    target  = vet[2]
                     bp      = False
+
                     # Identifica CALL com breakpoint espaçado
                     if len(vet) == 4 and vet[3] == "!":
                         bp = True
                     # Identifica CALL com breakpoint ou não
-                    if len(vet) == 3:
+                    if len(vet) == 3 or len(vet)==4:
                         if "!" in vet[2]:
                             bp = True
-                            vet[2] = vet[2].replace("!","")
-                        vetTrans[state] = (0,target,bp)
+                            target = target.replace("!","")
 
+                        if target == "pare":
+                            target = -2
+                        elif target == "retorne":
+                            target = -1
+                        elif target == "*":
+                            target = state
+                        else:
+                            target = int(target)
+                        vetTrans[state] = (0,procname, target,bp)
 
                     # Identifica Instrução
-                    elif len(vet) == 6 or len(vet) == 7:
-                        source = vet[0]
+                    if len(vet) == 6 or len(vet) == 7:
+                        source = int(vet[0])
                         _read = vet[1]
                         write = vet[3]
                         target = vet[5]
@@ -77,10 +85,6 @@ def readFile(filedir):
                             _read = None
                         if write == "_":
                             write = None
-
-                        # Target = *
-                        if target == "*":
-                            target = source
 
                         if source not in vetTrans:
                             vetTrans[source] = (1, {})
@@ -103,16 +107,18 @@ def readFile(filedir):
                         else:
                             bp = False
 
+                        # Target = *
+                        if target == "*":
+                            target = source
+                        elif target == "pare":
+                            target = -2
+                        elif target == "retorne":
+                            target = -1
+                        else:
+                            target = int(target)
                         trans = (write, pos, target, bp)
                         vetTrans[source][1][_read] = trans
 
 
-        return geral
-    mt = identify()
-    for m in mt:
-        print("=================")
-        print(m)
-        print("=================")
-
-if __name__ == "__main__":
-    readFile("turing.mt")
+        return mt
+    return identify()

@@ -3,10 +3,11 @@
     01 a -- A i 10
     01 b -- B i 20
     10 moveFim 11
+    20 moveFim 21
 
     ; leu a
     11 iniEsq 12
-    12 a -- A i *
+    12 a -- A i 30
     12 b -- * i 70
     12 _ -- * i 60
 
@@ -67,6 +68,6 @@
     01 moveFim 02
     02 * -- * d 03
     03 * -- N d 04
-    05 * -- A d 06
-    06 * -- O d retorne
+    04 * -- A d 05
+    05 * -- O d retorne
   fim ; nao
