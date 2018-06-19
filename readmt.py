@@ -1,4 +1,5 @@
 import machine
+import sys
 
 def readFile(filedir):
     '''Le o arquivo e retorna as linhas'''
@@ -6,8 +7,8 @@ def readFile(filedir):
         try:
             fn=open(filedir,"U")
         except IOError:
-            print("Error: File does not appear to exist.")
-            return 0
+            print(f"error: File '{filedir}' does not appear to exist.")
+            sys.exit()
 
         with fn as f:
             content = f.readlines()
@@ -27,18 +28,28 @@ def readFile(filedir):
         else:
             return linha
 
-    '''Identifica a linha'''
+    '''Identifica a linha e retorna a MT'''
     def identify():
         content = read()
         bloco   = False
         mt = {}
+        i = 0
         for c in content:
             c = removeComent(c)
+            i += 1
             vet = c.split()
             if len(vet) > 0:
+                # String maior ou menor que qualquer uma identificada
+                if len(vet) == 2 or len(vet) > 6 or (len(vet) == 1 and "fim" not in vet[0]) or (len(vet) == 3 and "bloco" not in vet[0] and bloco == False):
+                    print(f"Warning: '{c}' undefined string format. Line [{i}]")
                 if bloco == False and vet[0] == "bloco":
                     bloco = True
-                    mt[vet[1]] = (int(vet[2]),{})
+
+                    try:
+                        mt[vet[1]] = (int(vet[2]),{})
+                    except Exception as e:
+                        print(f"error: '{vet[2]}' is not a integer. Line [{i}]")
+                        sys.exit()
                     vetTrans = mt[vet[1]][1]
                     t = {}
                     s = {}
@@ -47,7 +58,11 @@ def readFile(filedir):
                     bloco = False
 
                 elif bloco == True:
-                    state   = int(vet[0])
+                    try:
+                        state   = int(vet[0])
+                    except Exception as e:
+                        print(f"error: '{vet[0]}' is not a integer. Line [{i}]")
+                        sys.exit()
                     procname = vet[1]
                     target  = vet[2]
                     bp      = False
@@ -68,12 +83,20 @@ def readFile(filedir):
                         elif target == "*":
                             target = state
                         else:
-                            target = int(target)
+                            try:
+                                target = int(target)
+                            except Exception as e:
+                                print(f"error: Target '{target}' is not a integer/'retorne'/'pare'. Line [{i}]")
+                                sys.exit()
                         vetTrans[state] = (0,procname, target,bp)
 
                     # Identifica Instrução
                     if len(vet) == 6 or len(vet) == 7:
-                        source = int(vet[0])
+                        try:
+                            source = int(vet[0])
+                        except Exception as e:
+                            print(f"error: Source '{target}' is not a integer. Line [{i}]")
+                            sys.exit()
                         _read = vet[1]
                         write = vet[3]
                         target = vet[5]
@@ -115,7 +138,11 @@ def readFile(filedir):
                         elif target == "retorne":
                             target = -1
                         else:
-                            target = int(target)
+                            try:
+                                target = int(target)
+                            except Exception as e:
+                                print(f"error: Target '{target}' is not a integer/'retorne'/'pare'. Line [{i}]")
+                                sys.exit()
                         trans = (write, pos, target, bp)
                         vetTrans[source][1][_read] = trans
 
