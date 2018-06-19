@@ -3,10 +3,10 @@
 #     state: (TAPE, {
 #         read: (write, go, target, BREAKPOINT)
 #     }),
-#     state: (CALL, target, BREAKPOINT)
+#     state: (CALL, procedure_name, target, BREAKPOINT)
 # }
 
-# the machine:
+# the virtual machine:
 # {
 #     procedure_name: (initial, state_machine)
 # }

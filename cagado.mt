@@ -14,11 +14,11 @@ bloco main 0
     1 * -- * i 3
     2 * -- * i 3
 
-    3 error pare
+    3 erro pare
 
 fim
 
-bloco error 0
+bloco erro 0
 
     0 * -- E d 1
     1 * -- R d 2
